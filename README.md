@@ -31,18 +31,6 @@ install.packages(c("psych", "MVN", "corrplot", "VIM", "boot"))
 # For visualization
 install.packages(c("ggplot2", "ggthemes", "wesanderson", "gridExtra"))
 
-# Optional packages
-install.packages(c("BaylorEdPsych", "Amelia", "naniar"))
-Usage
-1. Clone the repository
-bash
-git clone https://github.com/jkomalceh/workplace-wellbeing-assessment-MasterThesis.git
-cd workplace-wellbeing-assessment-MasterThesis
-2. Set up your data
-Place your data file (pilotdata_4comp.csv) in the data/raw/ directory.
-
-3. Run the analysis pipeline
-r
 # Set working directory to the project root
 setwd("path/to/workplace-wellbeing-assessment-MasterThesis")
 
