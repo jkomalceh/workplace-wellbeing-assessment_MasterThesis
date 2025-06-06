@@ -1,0 +1,96 @@
+Data Directory
+This directory contains the data files used in the workplace well-being assessment analysis.
+
+Data Privacy Notice
+The raw data files are NOT included in this repository due to:
+
+Participant privacy and confidentiality
+Institutional data sharing agreements
+Ethical considerations
+Data Structure
+Expected File: pilotdata_4comp.csv
+Format specifications:
+
+File type: CSV
+Delimiter: Semicolon (;)
+Encoding: UTF-8
+Missing values: Coded as NA
+Special coding: Environmental domain variables = -999 when not applicable
+Variables Overview
+Demographics:
+
+age_cat: Age categories (<25, 25-34, 35-44, 45-54, >=55)
+sex_cat: Gender (M, F)
+LanguageCode: Survey language (nl, du, fr)
+ismobile: Device type (TRUE/FALSE)
+Name_Company: Company identifier
+Version_survey: Survey version
+Psychosocial Domain (PS):
+
+veerkracht_calc: Resilience score (continuous)
+psy_rating_pace: Work pace (1-5 ordinal)
+psy_rating_emotional: Emotional demands (1-5 ordinal)
+psy_rating_sphere: Work atmosphere (1-5 ordinal)
+psy_work_life: Work-life balance (1-5 ordinal)
+Ergonomics Domain (ER):
+
+erg_capac: Ergonomic capacity (1-5 ordinal)
+erg_rating_posture: Stressful postures (1-5 ordinal)
+erg_rating_repeat: Repetitive work (1-5 ordinal)
+erg_rating_sitting: Prolonged sitting (1-5 ordinal)
+erg_rating_loads: Manual handling (1-5 ordinal)
+erg_rating_physical: Physical strain (1-5 ordinal)
+Safety Domain (SA):
+
+saf_satisfaction: Safety satisfaction (1-5 ordinal)
+saf_rating_workinvolv: Work involvement (1-5 ordinal)
+saf_rating_leadengage: Leadership engagement (1-5 ordinal)
+Hygiene Domain (HY):
+
+hyg_satisfaction: Hygiene satisfaction (1-5 ordinal)
+hyg_rating_tools: Tool vibrations (1-5 ordinal)
+hyg_rating_low_temp: Low temperature exposure (1-5 ordinal)
+hyg_rating_high_temp: High temperature exposure (1-5 ordinal)
+hyg_rating_noise: Noise exposure (1-5 ordinal)
+hyg_rating_substances: Hazardous substances (1-5 ordinal)
+Environmental Domain (Optional):
+
+mil_rating_leadengage: Environmental leadership (1-5 ordinal)
+mil_satisfaction: Environmental satisfaction (1-5 ordinal)
+mil_rating_contrib: Environmental contribution (1-5 ordinal)
+mil_rating_workinvolv: Environmental involvement (1-5 ordinal)
+Frequency/Exposure Variables:
+
+Various freq_exp_* variables indicating frequency of exposure
+Sample Data Structure
+r
+# Example of data structure (first 5 rows, selected columns)
+# This is simulated data for illustration only
+
+tibble(
+  age_cat = c("25-34", "35-44", "45-54", "25-34", ">=55"),
+  sex_cat = c("M", "F", "M", "F", "M"),
+  psy_rating_pace = c(3, 4, 2, 5, 3),
+  erg_rating_posture = c(2, 3, 4, 3, 2),
+  saf_satisfaction = c(4, 5, 3, 4, 5),
+  hyg_rating_noise = c(2, 3, NA, 4, 2),
+  mil_satisfaction = c(4, -999, 3, -999, 5)
+)
+Data Access
+For access to the original data, please contact:
+
+Principal Investigator: [Name]
+Email: [email]
+Institution: [Institution Name]
+Access may be granted for:
+
+Replication purposes
+Further research (with appropriate ethics approval)
+Meta-analysis inclusion
+Creating Sample Data
+To test the code without access to the original data, you can use the script:
+
+r
+source("R/utils/create_sample_data.R")
+This will generate a simulated dataset with the same structure as the original data.
+
