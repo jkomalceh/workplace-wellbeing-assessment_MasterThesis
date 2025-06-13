@@ -1,9 +1,12 @@
-# Create Sample Data for Testing - Matching Thesis Sample Characteristics
-# This script generates a simulated dataset that matches the sample characteristics
-# described in the thesis methodology
 
-library(tidyverse)
-set.seed(12345)  # For reproducibility
+# Setting working directory
+setwd("D:/2Y_MasterThesis/Data")
+
+# Load required package for skewness/kurtosis calculation
+if(!require(moments)) {
+  install.packages("moments")
+  library(moments)
+}
 
 # Function to generate sample data matching thesis characteristics
 create_sample_data <- function(n = 699) {  # Default to thesis sample size
@@ -321,30 +324,45 @@ create_sample_data <- function(n = 699) {  # Default to thesis sample size
   }
   
   # 12. FREQUENCY/EXPOSURE VARIABLES (correlated with main variables)
-  sample_data$hyg_freq_exp_substances <- generate_ordinal(n, 0.22,
-                                                         correlate_with = sample_data$hyg_rating_substances,
-                                                         correlation = 0.7)
-  sample_data$hyg_freq_exp_tools <- generate_ordinal(n, 0.20,
-                                                    correlate_with = sample_data$hyg_rating_tools,
-                                                    correlation = 0.7)
-  sample_data$hyg_freq_exp_high_temp <- generate_ordinal(n, 0.19,
-                                                        correlate_with = sample_data$hyg_rating_high_temp,
-                                                        correlation = 0.7)
-  sample_data$hyg_freq_exp_low_temp <- generate_ordinal(n, 0.21,
-                                                       correlate_with = sample_data$hyg_rating_low_temp,
-                                                       correlation = 0.7)
-  sample_data$hyg_freq_exp_noise <- generate_ordinal(n, 0.18,
-                                                    correlate_with = sample_data$hyg_rating_noise,
-                                                    correlation = 0.7)
-  sample_data$erg_freq_exp_sitting <- generate_ordinal(n, 0.16,
-                                                      correlate_with = sample_data$erg_rating_sitting,
-                                                      correlation = 0.7)
-  sample_data$erg_freq_exp_posture <- generate_ordinal(n, 0.17,
-                                                      correlate_with = sample_data$erg_rating_posture,
-                                                      correlation = 0.7)
-  sample_data$erg_freq_exp_physical <- generate_ordinal(n, 0.15,
-                                                       correlate_with = sample_data$erg_rating_physical,
-                                                       correlation = 0.7)
+  sample_data$hyg_freq_exp_substances <- generate_ordinal_with_stats(n, 3.2, 0.9, 1, 4, -1.0,
+                                                                    prob_na = 0.22,
+                                                                    correlate_with = sample_data$hyg_rating_substances,
+                                                                    correlation = 0.7)
+  
+  sample_data$hyg_freq_exp_tools <- generate_ordinal_with_stats(n, 3.1, 0.95, 1, 4, -0.8,
+                                                               prob_na = 0.20,
+                                                               correlate_with = sample_data$hyg_rating_tools,
+                                                               correlation = 0.7)
+  
+  sample_data$hyg_freq_exp_high_temp <- generate_ordinal_with_stats(n, 3.0, 1.0, 1, 4, -0.6,
+                                                                   prob_na = 0.19,
+                                                                   correlate_with = sample_data$hyg_rating_high_temp,
+                                                                   correlation = 0.7)
+  
+  sample_data$hyg_freq_exp_low_temp <- generate_ordinal_with_stats(n, 2.9, 1.1, 1, 4, -0.5,
+                                                                  prob_na = 0.21,
+                                                                  correlate_with = sample_data$hyg_rating_low_temp,
+                                                                  correlation = 0.7)
+  
+  sample_data$hyg_freq_exp_noise <- generate_ordinal_with_stats(n, 3.0, 1.0, 1, 4, -0.7,
+                                                               prob_na = 0.18,
+                                                               correlate_with = sample_data$hyg_rating_noise,
+                                                               correlation = 0.7)
+  
+  sample_data$erg_freq_exp_sitting <- generate_ordinal_with_stats(n, 2.8, 1.1, 1, 4, -0.3,
+                                                                 prob_na = 0.16,
+                                                                 correlate_with = sample_data$erg_rating_sitting,
+                                                                 correlation = 0.7)
+  
+  sample_data$erg_freq_exp_posture <- generate_ordinal_with_stats(n, 3.1, 0.95, 1, 4, -0.9,
+                                                                 prob_na = 0.17,
+                                                                 correlate_with = sample_data$erg_rating_posture,
+                                                                 correlation = 0.7)
+  
+  sample_data$erg_freq_exp_physical <- generate_ordinal_with_stats(n, 3.3, 0.9, 1, 4, -1.2,
+                                                                  prob_na = 0.15,
+                                                                  correlate_with = sample_data$erg_rating_physical,
+                                                                  correlation = 0.7)
   
   # 13. ADDITIONAL AUXILIARY VARIABLES
   sample_data$shift <- sample(c("Day", "Night", "Rotating"), n, 
@@ -435,7 +453,7 @@ cat(sprintf("Dimensions: %d rows × %d columns\n", nrow(sample_data), ncol(sampl
 
 # Display descriptive statistics comparison
 cat("\nDescriptive Statistics Comparison:\n")
-cat("=" * 80, "\n")
+cat(paste(rep("=", 80), collapse = ""), "\n")
 
 # Function to calculate stats for ordinal variables
 calc_stats <- function(x, var_name, domain) {
@@ -504,6 +522,37 @@ stats_list <- append(stats_list, list(
 stats_df <- do.call(rbind, stats_list)
 print(stats_df, row.names = FALSE)
 
+# Display correlation matrix comparison
+cat("\nCorrelation Matrix Check (subset of key variables):\n")
+cat(paste(rep("=", 80), collapse = ""), "\n")
+
+# Select variables for correlation check
+cor_vars <- c("psy_rating_pace", "psy_rating_emotional", "psy_rating_sphere", "psy_work_life",
+              "erg_rating_posture", "erg_rating_repeat", "erg_rating_sitting", 
+              "erg_rating_loads", "erg_rating_physical",
+              "saf_rating_workinvolv", "saf_rating_leadengage",
+              "hyg_rating_tools", "hyg_rating_low_temp", "hyg_rating_high_temp",
+              "hyg_rating_noise", "hyg_rating_substances")
+
+# Calculate correlation matrix
+cor_data <- sample_data[, cor_vars]
+cor_matrix <- cor(cor_data, use = "pairwise.complete.obs")
+
+# Display some key correlations
+cat("\nWithin-domain correlations:\n")
+cat("Psychosocial: pace-emotional =", round(cor(sample_data$psy_rating_pace, 
+                                                sample_data$psy_rating_emotional, 
+                                                use = "complete.obs"), 2), "\n")
+cat("Ergonomics: posture-physical =", round(cor(sample_data$erg_rating_posture, 
+                                               sample_data$erg_rating_physical, 
+                                               use = "complete.obs"), 2), "\n")
+cat("Safety: leadership-involvement =", round(cor(sample_data$saf_rating_leadengage, 
+                                                sample_data$saf_rating_workinvolv, 
+                                                use = "complete.obs"), 2), "\n")
+cat("Hygiene: high_temp-low_temp =", round(cor(sample_data$hyg_rating_high_temp, 
+                                              sample_data$hyg_rating_low_temp, 
+                                              use = "complete.obs"), 2), "\n")
+
 cat("\nNOTE: This simulated data closely matches the distributional characteristics\n")
-cat("      of the thesis sample (means, SDs, skewness, etc.) while maintaining\n")
+cat("      and correlation structure of the thesis sample while maintaining\n")
 cat("      complete confidentiality of the actual company data.\n")
